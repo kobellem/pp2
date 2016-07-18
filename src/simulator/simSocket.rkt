@@ -3,7 +3,7 @@
 
 (require racket/udp)
 (require data/queue)
-(provide setup listen)
+(provide setup listen read-messages)
 
 (define request-queue (make-queue))
 
@@ -26,4 +26,13 @@
   )
   (thread listener)
   #t
+)
+
+(define (read-messages reader)
+  (when (not (queue-empty? answer-queue))
+    (begin
+      (reader (dequeue! request-queue))
+      (read-messages)
+    )
+  )
 )
