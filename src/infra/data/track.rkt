@@ -15,7 +15,9 @@
     ;public methods
     (define (add-segment id node1 node2)
       (define segment (cons id (cons node1 node2)))
-      (set-add! segments segment))
+      (set-add! segments segment)
+      (send node1 add-segment id)
+      (send node2 add-segment id))
     (define (get-segment id)
       (find-segment segments id))
     (define (get-length id)
