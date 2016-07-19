@@ -7,12 +7,15 @@
 (define tcpRequester%
   (class object%
     (super-new)
-    (public request)
+    (public request request-serialized)
     ;variable initialization
     (init-field host)
     (init-field port)
     ;public methods
-    (define (request msg)
+    (define (request msg) (send msg))
+    (define (request-serialized msg) (deserialize (send msg)))
+    ;private methods
+    (define (send msg)
       (define-values (in out) (tcp-connect host port))
       (write msg out)
       (flush-output out)
