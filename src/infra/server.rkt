@@ -1,0 +1,21 @@
+#lang racket
+;Author Koen Bellemans
+
+(require racket/tcp)
+(provide server%)
+
+(define server%
+  (class object%
+    (super-new)
+    (public listen)
+    ;initialization
+    (init port)
+    (define listener (tcp-listen port))
+    ;public methods
+    (define (listen reader)
+      (let loop ()
+        (define-values (in out) (tcp-accept listener))
+        (reader in out)
+        (close-input-port in)
+        (close-output-port out)
+        (loop)))))
