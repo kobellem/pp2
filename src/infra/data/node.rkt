@@ -9,9 +9,9 @@
     ;public methods
     (public get-id get-coordinates)
     ;variable initialization
-    (init id x y)
-    (define id_ id)
+    (init-field id)
+    (init x y)
     (define coordinates (cons x y))
     ;method definitions
-    (define (get-id) id_)
+    (define (get-id) id)
     (define (get-coordinates) coordinates)))
