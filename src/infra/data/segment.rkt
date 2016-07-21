@@ -34,5 +34,4 @@
   (define/public (externalize)(list id nodes))
   (define/public (internalize lst)
     (set-id! (car lst))
-    (println (cdr lst))
     (set-nodes! (caadr lst)(cdadr lst))))
