@@ -8,7 +8,7 @@
 (define-serializable-class* track% object% (externalizable<%>)
   (super-new)
   ;public methods
-  (public add-segment get-segment get-ids)
+  (public add-segment get-segment for-each-segment)
   ;variable initialization
   (init)
   (define segments (mutable-set))
@@ -23,7 +23,9 @@
       (send node2 add-segment id_)))
   (define (get-segment id_)
     (find-segment (set-copy segments) id_))
-  (define (get-ids) (list-ids))
+  (define (for-each-segment proc)
+    (for/mutable-set ([seg segments])
+      (proc seg)))
   ;private methods
   (define (find-segment st id_)
     (if (not (set-empty? st))
@@ -34,11 +36,6 @@
             (set-remove! st current) 
             (find-segment st id_))))
       #f))
-  (define (list-ids)
-    (define ids '())
-    (for*/mutable-set ([seg segments])
-      (set! ids (append ids (list (id seg)))))
-    ids)
   ;externalizable interface
   (define/public (externalize) segments)
   (define/public (internalize s) (set! segments s)))
