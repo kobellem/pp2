@@ -9,10 +9,11 @@
     (super-new)
     (public listen)
     ;initialization
-    (init port)
+    (init-field port)
     (define listener (tcp-listen port))
     ;public methods
     (define (listen reader)
+    (println (string-append "Server now listening on port " (number->string port)))
       (let loop ()
         (define-values (in out) (tcp-accept listener))
         (reader in out)
