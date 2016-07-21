@@ -27,9 +27,11 @@
   (define (calculate-length)
     (let* ([node1 (car nodes)]
            [node2 (cdr nodes)]
-           [c1 (send node1 get-coordinates)]
-           [c2 (send node2 get-coordinates)])
-      (set!  l (sqrt (+ (expt (- (car c2) (car c1)) 2) (expt (- (cdr c2) (cdr c1)) 2))))))
+           [x1 (send node1 get-x)]
+           [y1 (send node1 get-y)]
+           [x2 (send node2 get-x)]
+           [y2 (send node2 get-y)])
+      (set!  l (sqrt (+ (expt (- x2 x1) 2) (expt (- y2 y1) 2))))))
   ;externalizable interface
   (define/public (externalize)(list id nodes))
   (define/public (internalize lst)

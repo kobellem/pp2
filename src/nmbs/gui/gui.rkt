@@ -25,9 +25,11 @@
           (let* ([nodes (send seg get-nodes)]
                  [node1 (car nodes)]
                  [node2 (cdr nodes)]
-                 [c1 (send node1 get-coordinates)]
-                 [c2 (send node2 get-coordinates)])
-            (send dc draw-line (car c1) (cdr c1) (car c2) (cdr c2)))))))
+                 [x1 (send node1 get-x)]
+                 [y1 (send node1 get-y)]
+                 [x2 (send node2 get-x)]
+                 [y2 (send node2 get-y)])
+            (send dc draw-line x1 y1 x2 y2))))))
     ;initialization
     (make-window 1024 512)
     (sleep/yield 1)

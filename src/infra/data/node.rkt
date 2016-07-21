@@ -12,7 +12,7 @@
 (define-serializable-class* node% object% (externalizable<%>)
   (super-new)
   ;public methods
-  (public set-id! get-id set-coordinates! get-coordinates add-segment get-segments is-switch? switch)
+  (public set-id! get-id set-coordinates! get-x get-y add-segment get-segments is-switch? switch)
   ;variable initialization
   ;No initialization arguments to support serialization
   (define id #f)
@@ -24,7 +24,8 @@
   (define (set-id! id_) (set! id id_))
   (define (get-id) id)
   (define (set-coordinates! x y) (set! coordinates (cons x y)))
-  (define (get-coordinates) coordinates)
+  (define (get-x) (car coordinates))
+  (define (get-y) (cdr coordinates))
   (define (add-segment sid)
     (cond
       [(not seg1) (set! seg1 sid)]
