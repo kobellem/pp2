@@ -33,4 +33,6 @@
   (define/public (internalize lst)
     (set-id! (car lst))
     (set-position! (cadr lst))
-    (set-speed! (caddr lst))))
+    (set-speed! (caddr lst)))
+  ;train thread
+)
