@@ -9,7 +9,7 @@
     (super-new)
     (public refresh)
     ;variable initialization
-    (init-field track)
+    (init-field callbacks)
     (define canvas #f)
     (define green (make-color 0 255 0 1))
     ;publice methods
@@ -20,9 +20,19 @@
       (define window (new frame% [label "pp2"][width x][height y]))
       (set! canvas (new canvas% [parent window]))
       (send window show #t))
+    (define (find-callback tag)
+      (let loop ([lst callbacks])
+        (println lst)
+        (if(empty? lst)
+          #f
+          (if (eq? (caar lst) tag)
+            (cdar callbacks)
+            (loop (cdr lst))))))
     (define (draw-track)
+      (println (find-callback 'get-track))
       (let* ([dc (send canvas get-dc)]
-             [pen (new pen% [color green])])
+             [pen (new pen% [color green])]
+             [track ((find-callback 'get-track))])
         (send dc set-pen pen)
         (send track for-each-segment (lambda (seg)
           (let* ([nodes (send seg get-nodes)]

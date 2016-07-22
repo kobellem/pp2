@@ -5,9 +5,18 @@
 
 (define (nmbs)
   (define tcpRequester (new tcpRequester% [host "localhost"][port 3000]))
-  (define track (send tcpRequester request-serialized "get-track"))
   ;create gui
-  (define gui (new gui% [track track]))
-  (print "ok"))
+  (define gui (new gui% [callbacks (make-callbacks tcpRequester)]))
+  ;(send tcpRequester request "add-train" (list "1" 5))
+  ;(print (send tcpRequester request-serialized "get-trains"))
+)
+
+(define (make-callbacks tcpRequester)
+  (list
+    ;get-track callback
+    (cons
+      'get-track
+      (lambda ()
+        (send tcpRequester request-serialized "get-track")))))
 
 (nmbs)
