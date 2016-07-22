@@ -10,11 +10,12 @@
 
 (define-serializable-class* segment% object% (externalizable<%>)
   (super-new)
-  (public set-id! get-id set-nodes! get-nodes get-length)
+  (public set-id! get-id set-nodes! get-nodes get-length set-state! state-eq?)
   ;no initialization arguments to support serialization
   (define id #f)
   (define nodes #f)
   (define l #f)
+  (define state 0) ;states: 0=free, 1=reserved, 2=occupied
   ;public methods
   (define (set-id! id_)(set! id id_))
   (define (get-id) id)
@@ -23,6 +24,19 @@
     (calculate-length))
   (define (get-nodes) nodes)
   (define (get-length) l)
+  (define (set-state! new-state)
+    (cond
+      [(string=? new-state 'free)(set! state 0)]
+      [(string=? new-state 'reserved)(set! state 1)]
+      [(string=? new-state 'occupied)(set! state 2)]
+      [else #f])
+    #t)
+  (define (state-eq? s)
+    (cond
+      [(string=? s 'free)(eq? state 0)]
+      [(string=? s 'reserved)(eq? state 1)]
+      [(string=? s 'occupied)(eq? state 2)]
+      [else #f]))
   ;private methods
   (define (calculate-length)
     (let* ([node1 (car nodes)]
@@ -33,7 +47,8 @@
            [y2 (send node2 get-y)])
       (set!  l (sqrt (+ (expt (- x2 x1) 2) (expt (- y2 y1) 2))))))
   ;externalizable interface
-  (define/public (externalize)(list id nodes))
+  (define/public (externalize)(list id nodes state))
   (define/public (internalize lst)
     (set-id! (car lst))
-    (set-nodes! (caadr lst)(cdadr lst))))
+    (set-nodes! (caadr lst)(cdadr lst))
+    (set! state (caddr lst))))
