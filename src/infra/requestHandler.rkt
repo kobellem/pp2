@@ -9,7 +9,7 @@
     (super-new)
     (public handle-request)
     ;variable initialization
-    (init-field track)
+    (init-field track trainHandler)
     (init)
     ;public methods
     (define (handle-request in out)
