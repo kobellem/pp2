@@ -26,16 +26,16 @@
   (define (get-length) l)
   (define (set-state! new-state)
     (cond
-      [(string=? new-state 'free)(set! state 0)]
-      [(string=? new-state 'reserved)(set! state 1)]
-      [(string=? new-state 'occupied)(set! state 2)]
+      [(eq? new-state 'free)(set! state 0)]
+      [(eq? new-state 'reserved)(set! state 1)]
+      [(eq? new-state 'occupied)(set! state 2)]
       [else #f])
     #t)
   (define (state-eq? s)
     (cond
-      [(string=? s 'free)(eq? state 0)]
-      [(string=? s 'reserved)(eq? state 1)]
-      [(string=? s 'occupied)(eq? state 2)]
+      [(eq? s 'free)(eq? state 0)]
+      [(eq? s 'reserved)(eq? state 1)]
+      [(eq? s 'occupied)(eq? state 2)]
       [else #f]))
   ;private methods
   (define (calculate-length)
