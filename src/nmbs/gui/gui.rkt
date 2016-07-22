@@ -11,7 +11,9 @@
     ;variable initialization
     (init-field callbacks)
     (define canvas #f)
+    (define red (make-color 255 0 0 1))
     (define green (make-color 0 255 0 1))
+    (define blue (make-color 0 0 255))
     ;publice methods
     (define (refresh)
       (draw-track))
@@ -29,11 +31,11 @@
             (cdar callbacks)
             (loop (cdr lst))))))
     (define (draw-track)
-      (println (find-callback 'get-track))
       (let* ([dc (send canvas get-dc)]
-             [pen (new pen% [color green])]
+             [red-pen (new pen% [color red])]
+             [green-pen (new pen% [color green])]
+             [blue-pen (new pen% [color blue])]
              [track ((find-callback 'get-track))])
-        (send dc set-pen pen)
         (send track for-each-segment (lambda (seg)
           (let* ([nodes (send seg get-nodes)]
                  [node1 (car nodes)]
@@ -42,6 +44,11 @@
                  [y1 (send node1 get-y)]
                  [x2 (send node2 get-x)]
                  [y2 (send node2 get-y)])
+            ;set the right pen color
+            (cond
+              [(send seg state-eq? 'free)(send dc set-pen green-pen)]
+              [(send seg state-eq? 'reserved)(send dc set-pen blue-pen)]
+              [(send seg state-eq? 'occupied)(send dc set-pen red-pen)])
             (send dc draw-ellipse (- x1 5) (- y1 5) 10 10)
             (send dc draw-line x1 y1 x2 y2))))))
     ;initialization
