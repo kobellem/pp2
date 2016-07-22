@@ -33,7 +33,7 @@
              [seg-id (cadr args)]
              [pos (send track get-segment seg-id)])
         (send trainHandler add-train id pos)
-        (write (string-append "Train " (number->string id)) out)))
+        (write (string-append "Train " id) out)))
     (define (get-trains out)
       (write (serialize (send trainHandler get-trains)) out))
     (define (unknown req out)

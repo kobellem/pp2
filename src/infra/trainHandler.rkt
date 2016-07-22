@@ -24,7 +24,7 @@
       (if (set-empty? st)
         #f
         (let ([current (set-first st)])
-          (if (eq? (id current) id_)
+          (if (string=? (id current) id_)
             current
           (begin
             (set-remove! st current)
