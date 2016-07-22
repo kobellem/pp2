@@ -19,7 +19,9 @@
   ;public methods
   (define (set-id! id_)(set! id id_))
   (define (get-id) id)
-  (define (set-position! pos)(set! position pos))
+  (define (set-position! pos)
+    (set! position pos)
+    (send pos set-state! 'occupied))
   (define (get-position) position)
   (define (set-speed! new-speed)(set! speed new-speed))
   (define (get-speed) speed)
