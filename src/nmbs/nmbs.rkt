@@ -19,6 +19,10 @@
     (cons
       'add-train
       (lambda (id pos)
-        (send tcpRequester request "add-train" (list id pos))))))
+        (send tcpRequester request "add-train" (list id pos))))
+    (cons
+      'get-trains
+      (lambda ()
+        (send tcpRequester request-serialized "get-trains")))))
 
 (nmbs)

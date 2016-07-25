@@ -15,7 +15,7 @@
     (define (id train)(send train get-id))
     ;public methods
     (define (add-train id_ pos)
-      (set-add! trains (list (make-train id_ pos))))
+      (set-add! trains (make-train id_ pos)))
     (define (get-train id_)
       (find-train (set-copy trains) id_))
     (define (get-trains) trains)

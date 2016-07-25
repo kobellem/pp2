@@ -21,10 +21,12 @@
       [enabled #t]
       [alignment '(center top)]
       [add-train (find-callback callbacks 'add-train)]
+      [get-trains (find-callback callbacks 'get-trains)]
       [goto (find-callback callbacks 'goto)]))
     ;private methods
     (define (refresh)
-      (send trackPanel draw-track))
+      (send trackPanel draw-track)
+      (send trainPanel list-trains))
     (define (make-window x y)
       (send window show #t))
     ;initialization
