@@ -2,7 +2,6 @@
 ;Author Koen Bellemans
 
 (require racket/set)
-(require "trainPane.rkt")
 (provide trainPanel%)
 
 (define trainPanel%
@@ -42,7 +41,7 @@
                  [speed (send train get-speed)]
                  [train-pane (find-train-pane id)])
             (if train-pane
-              (send train-pane update! pos speed)
+              (send train-pane update! seg speed)
               (set! train-panes (cons
                 (new trainPane%
                   [parent trains-pane]
@@ -56,3 +55,18 @@
           (if (string=? (send (car lst) get-id) id)
             (car lst)
             (loop (cdr lst))))))))
+
+(define trainPane%
+  (class vertical-pane%
+    (super-new)
+    (public get-id update!)
+    ;variable initialization
+    (init-field id goto)
+    (define id-message (new message% [label (string-append "Train: " id)][parent this]))
+    (define pos-message (new message% [label "wait for update"][parent this]))
+    (define speed-message (new message% [label "wait for update"][parent this]))
+    ;public methods
+    (define (get-id) id)
+    (define (update! seg speed)
+      (send pos-message set-label (string-append "Position: " (number->string (send seg get-id))))
+      (send speed-message set-label (string-append "Speed: " (number->string speed))))))
