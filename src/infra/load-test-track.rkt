@@ -1,20 +1,20 @@
 #lang racket
 ;Author Koen Bellemans
 
-(require "data/track.rkt" "data/node.rkt")
+(require "../lib/data/track.rkt" "../lib/data/node.rkt")
 (provide load-test-track)
 
 (define (load-test-track)
   (define track (new track%))
   ;define nodes
-  (define node1 (make-node 1 4 1))
-  (define node2 (make-node 2 8 1))
-  (define node3 (make-node 3 12 1))
-  (define node4 (make-node 4 14 4))
-  (define node5 (make-node 4 12 7))
-  (define node6 (make-node 6 8 7))
-  (define node7 (make-node 7 4 7))
-  (define node8 (make-node 8 1 4))
+  (define node1 (make-node 1 80 20))
+  (define node2 (make-node 2 160 20))
+  (define node3 (make-node 3 240 20))
+  (define node4 (make-node 4 280 80))
+  (define node5 (make-node 4 240 140))
+  (define node6 (make-node 6 160 140))
+  (define node7 (make-node 7 80 140))
+  (define node8 (make-node 8 20 80))
   ;add segments to track
   (send track add-segment 1 node1 node2)
   (send track add-segment 2 node2 node3)

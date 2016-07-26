@@ -2,7 +2,7 @@
 ;Author Koen Bellemans
 
 (require racket/set data/queue)
-(require "data/train.rkt")
+(require "../lib/data/train.rkt")
 (provide trainHandler%)
 
 (define trainHandler%

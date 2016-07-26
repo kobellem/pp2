@@ -1,7 +1,7 @@
 #lang racket
 ;Author Koen Bellemans
 
-(require "gui/gui.rkt" "tcpRequester.rkt")
+(require "gui/gui.rkt" "../lib/tcp/tcpRequester.rkt")
 
 (define (nmbs)
   (define tcpRequester (new tcpRequester% [host "localhost"][port 3000]))
