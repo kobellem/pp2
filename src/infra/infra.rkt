@@ -1,7 +1,7 @@
 #lang racket
 ;Author Koen Bellemans
 
-(require "load-test-track.rkt" "server.rkt" "requestHandler.rkt" "trainHandler.rkt")
+(require "load-test-track.rkt" "../lib/tcp/server.rkt" "requestHandler.rkt" "trainHandler.rkt")
 
 (define (infra)
   ;load the testrack
