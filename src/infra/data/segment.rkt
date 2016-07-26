@@ -3,12 +3,15 @@
 
 (provide make-segment)
 
+;TODO catch creatin a segment with a node that's already a swictch
 (define (make-segment id node1 node2)
   (let ([segment (new segment%)])
     (send* segment (set-id! id)(set-nodes! node1 node2))
+    (send node1 add-segment segment)
+    (send node2 add-segment segment)
     segment))
 
-(define-serializable-class* segment% object% (externalizable<%>)
+(define-serializable-class* segment% object% (externalizable<%>)(equal<%>)
   (super-new)
   (public set-id! get-id set-nodes! get-nodes get-length set-state! state-eq?)
   ;no initialization arguments to support serialization
@@ -51,4 +54,7 @@
   (define/public (internalize lst)
     (set-id! (car lst))
     (set-nodes! (caadr lst)(cdadr lst))
-    (set! state (caddr lst))))
+    (set! state (caddr lst)))
+  ;public equality intarface
+  (define/public (equal-to? other recur)
+    (eq? id (send other get-id))))

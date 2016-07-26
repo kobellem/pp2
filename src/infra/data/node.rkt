@@ -26,11 +26,11 @@
   (define (set-coordinates! x y) (set! coordinates (cons x y)))
   (define (get-x) (car coordinates))
   (define (get-y) (cdr coordinates))
-  (define (add-segment sid)
+  (define (add-segment seg)
     (cond
-      [(not seg1) (set! seg1 sid)]
-      [(not seg2) (set! seg2 sid)]
-      [(not seg3) (set! seg3 sid)]
+      [(not seg1) (set! seg1 seg)]
+      [(not seg2) (set! seg2 seg)]
+      [(not seg3) (set! seg3 seg)]
       [else (error "Node" id "already has 3 segments")]))
   (define (get-segments) (cons seg1 seg2))
   (define (is-switch?) (if seg3 #t #f))
