@@ -2,9 +2,9 @@
 ;Author Koen Bellemans
 
 (require racket/serialize)
-(provide sim-requestHandler%)
+(provide requestHandler%)
 
-(define sim-requestHandler%
+(define requestHandler%
   (class object%
     (super-new)
     (public handle-request)
@@ -20,7 +20,7 @@
         (flush-output out)))
     ;private methods
     (define (init in out)
-      (set-track! (deserialize (read in)))
+      (set-track! (deserialize (car (read in))))
       (write "Track initialized" out))
     (define (unknown req out)
       (write (string-append "Unknown request: " req) out))))
