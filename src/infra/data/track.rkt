@@ -17,10 +17,7 @@
   (define (nodes seg)(send seg get-nodes))
   ;public methods
   (define (add-segment id_ node1 node2)
-    (let ([segment (make-segment id_ node1 node2)])
-      (set-add! segments segment)
-      (send node1 add-segment id_)
-      (send node2 add-segment id_)))
+    (set-add! segments (make-segment id_ node1 node2)))
   (define (get-segment id_)
     (find-segment (set-copy segments) id_))
   (define (for-each-segment proc)

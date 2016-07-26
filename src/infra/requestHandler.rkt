@@ -20,6 +20,7 @@
           [(string=? req "get-track")(get-track out)]
           [(string=? req "add-train")(add-train in out)]
           [(string=? req "get-trains")(get-trains out)]
+          [(string=? req "goto")(goto in out)]
           [else (unknown req out)])
         (flush-output out)))
     ;private methods
@@ -36,6 +37,13 @@
         (write (string-append "Train " id) out)))
     (define (get-trains out)
       (write (serialize (send trainHandler get-trains)) out))
+    (define (goto in out)
+      (let* ([args (read in)]
+             [id (car args)]
+             [seg-id (cadr args)]
+             [pos (send track get-segment seg-id)])
+        (send trainHandler goto id pos)
+        (write "ok" out)))
     (define (unknown req out)
       (write (string-append "Unknown request: " req) out)
       (flush-output out))))

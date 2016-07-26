@@ -7,11 +7,11 @@
 (define (make-segment id node1 node2)
   (let ([segment (new segment%)])
     (send* segment (set-id! id)(set-nodes! node1 node2))
-    (send node1 add-segment segment)
-    (send node2 add-segment segment)
+    (send node1 add-segment id)
+    (send node2 add-segment id)
     segment))
 
-(define-serializable-class* segment% object% (externalizable<%>)(equal<%>)
+(define-serializable-class* segment% object% (externalizable<%> equal<%>)
   (super-new)
   (public set-id! get-id set-nodes! get-nodes get-length set-state! state-eq?)
   ;no initialization arguments to support serialization
@@ -57,4 +57,8 @@
     (set! state (caddr lst)))
   ;public equality intarface
   (define/public (equal-to? other recur)
-    (eq? id (send other get-id))))
+    (eq? id (send other get-id)))
+  (define/public (equal-hash-code-of hash)
+    id)
+  (define/public (equal-secondary-hash-code-of hash)
+    id))

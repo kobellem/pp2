@@ -26,9 +26,9 @@
   (define (set-speed! new-speed)(set! speed new-speed))
   (define (get-speed) speed)
   (define (set-route! new-route)
-    (if (eq? (car new-route) position)
-      (error 'train "First route position must equal current position")
-      (set! route new-route)))
+    (if (equal? (car new-route) position)
+      (set! route new-route)
+      (error 'train "First route position must equal current position")))
   (define (get-route) route)
   ;externalizable interface
   (define/public (externalize) (list id position speed))

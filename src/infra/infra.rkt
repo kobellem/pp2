@@ -7,7 +7,7 @@
   ;load the testrack
   (define track (load-test-track))
   ;create trainHandler
-  (define trainHandler (new trainHandler%))
+  (define trainHandler (new trainHandler% [track track]))
   ;create TCP server
   (define server (new server% [port 3000]))
   (define requestHandler (new requestHandler% [track track][trainHandler trainHandler]))
