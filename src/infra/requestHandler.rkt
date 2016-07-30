@@ -9,7 +9,7 @@
     (super-new)
     (public handle-request)
     ;variable initialization
-    (init-field track trainHandler)
+    (init-field track controller)
     (init)
     ;public methods
     (define (handle-request in out)
@@ -33,16 +33,16 @@
              [id (car args)]
              [seg-id (cadr args)]
              [pos (send track get-segment seg-id)])
-        (send trainHandler add-train id pos)
+        (send controller add-train id pos)
         (write (string-append "Train " id) out)))
     (define (get-trains out)
-      (write (serialize (send trainHandler get-trains)) out))
+      (write (serialize (send controller get-trains)) out))
     (define (goto in out)
       (let* ([args (read in)]
              [id (car args)]
              [seg-id (cadr args)]
              [pos (send track get-segment seg-id)])
-        (send trainHandler goto id pos)
+        (send controller goto id pos)
         (write "ok" out)))
     (define (unknown req out)
       (write (string-append "Unknown request: " req) out)

@@ -3,9 +3,9 @@
 
 (require racket/set data/queue)
 (require "../lib/data/train.rkt")
-(provide trainHandler%)
+(provide controller%)
 
-(define trainHandler%
+(define controller%
   (class object%
     (super-new)
     (public add-train get-train get-trains goto)
