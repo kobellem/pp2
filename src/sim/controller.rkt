@@ -25,7 +25,7 @@
       (let ([answer '()])
         (for/list ([t trains])
           (set! answer (cons 
-            (list (send t get-id)(send t get-position)(send t get-speed))
+            (list (send t get-id)(send (send t get-position) get-id)(send t get-speed))
             answer)))
         answer))
     (define (set-speed! id_ new-speed dir)(send (find-train trains id_) set-speed! new-speed))
