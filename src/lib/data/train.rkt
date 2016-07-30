@@ -36,24 +36,4 @@
     (set-id! (car lst))
     (set-position! (cadr lst))
     (set-speed! (caddr lst)))
-  ;train thread
-  (define train-thread (thread (lambda ()
-    (let loop ()
-      (if (empty? route)
-        (begin
-          (set-speed! 0)
-          (sleep 10))
-        (begin
-          (set-speed! 5)
-          (let  ([delta (/ (send position get-length) speed)]
-                 [next-position (if (null? (cdr route)) #f (cadr route))])
-            (if (not next-position)
-              (set! route '())
-              (begin
-                (send next-position set-state! 'reserved)
-                (sleep delta)
-                (send position set-state! 'free)
-                (set-position! next-position)
-                (set-route! (cdr route))
-                (send position set-state! 'occupied))))))
-      (loop))))))
+)
