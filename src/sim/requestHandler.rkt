@@ -32,7 +32,7 @@
         (send controller add-train id pos))
       (write "train added" out))
     (define (get-trains out)
-      (write (serialize (send controller get-trains)) out))
+      (write (send controller get-trains) out))
     (define (set-speed in out)
       (let* ([args (read in)]
              [id (car args)]
