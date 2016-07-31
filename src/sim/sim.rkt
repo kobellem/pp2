@@ -14,6 +14,6 @@
     (thread
       (send server listen (lambda (in out)
         (send requestHandler handle-request in out)))))
-  (println "ok"))
+  (thread-wait server-thread))
 
 (sim)
