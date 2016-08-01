@@ -31,8 +31,7 @@
     (define (add-train in out)
       (let* ([args (read in)]
              [id (car args)]
-             [seg-id (cadr args)]
-             [pos (send track get-segment seg-id)])
+             [pos (cadr args)])
         (send controller add-train id pos)
         (write (string-append "Train " id) out)))
     (define (get-trains out)

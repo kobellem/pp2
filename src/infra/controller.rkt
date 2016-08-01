@@ -19,7 +19,7 @@
     (define (start train)(send requester request "set-speed" (list (send train get-id) 10 #t)))
     ;public methods
     (define (add-train id_ pos)
-      (set-add! trains (make-train id_ pos))
+      (set-add! trains (make-train id_ (send track get-segment pos)))
       (send requester request "add-train" (list id_ pos)))
     (define (get-train id_)
       (find-train (set-copy trains) id_))

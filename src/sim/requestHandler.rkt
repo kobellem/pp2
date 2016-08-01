@@ -28,7 +28,7 @@
     (define (add-train in out)
       (let* ([args (read in)]
              [id (car args)]
-             [pos (cdr args)])
+             [pos (cadr args)])
         (send controller add-train id pos))
       (write "train added" out))
     (define (get-trains out)
