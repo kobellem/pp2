@@ -22,7 +22,7 @@
   (define (get-speed) speed)
   (define (get-position) position)
   ;the train thread
-  (define t (thread
+  (define t (thread (lambda ()
     (let loop ()
       (if (eq? speed 0)
         (sleep 10)
@@ -35,5 +35,5 @@
                    (cdr segments)
                    (car segments))])
             (set! position next-position))))
-      (loop))))
+      (loop)))))
 ))
