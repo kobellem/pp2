@@ -31,7 +31,10 @@
             ;stop the train if it's moving
             (stop train)
             ;calculate the route and send it to the train
-            (send train set-route! (calculate-route track train pos))
+            (let ([route (calculate-route track train pos)])
+              (for/list ([seg (cdr route)])
+                (send seg set-state! 'reserved))
+              (send train set-route! route))
             ;start the train
             (start train))
           (error "Train not found"))))
@@ -65,8 +68,21 @@
                    [pos_ (send track get-segment pos_id)]
                    [speed_ (caddr t)]
                    [train (find-train trains id_)])
-              (send train set-position! pos_)
-              (send train set-speed! speed_))))
+              (send train set-speed! speed_)
+              (when (not (equal? pos_ (send train get-position)))
+                (update-position train pos_)))))
         (sleep 3)
         (loop (send requester request "get-trains")))))
+    (define (update-position train new-pos)
+      (let* ([route (send train get-route)]
+             [first-seg (car route)]
+             [second-seg (cadr route)])
+        (send first-seg set-state! 'free)
+        (if (null? (cddr route))
+          (begin 
+            (stop train)
+            (send train set-position! new-pos))
+          (if (equal? new-pos second-seg)
+            (send* train (set-position! new-pos)(set-route! (cdr route)))
+            (update-position train new-pos)))))
 ))
