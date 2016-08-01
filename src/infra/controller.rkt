@@ -57,10 +57,9 @@
             (loop (append route (list from)) next-seg)))))
     ;update thread
     (define (update) (lambda ()
-      (let loop ([trains (send requester request "get-trains")])
-        (println trains)
-        (when (not (empty? trains))
-          (for/list ([t trains])
+      (let loop ([ts (send requester request "get-trains")])
+        (when (not (empty? ts))
+          (for/list ([t ts])
             (let* ([id_ (car t)]
                    [pos_id (cadr t)]
                    [pos_ (send track get-segment pos_id)]
