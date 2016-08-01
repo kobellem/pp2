@@ -19,7 +19,6 @@
     (define (init track_)
       (set! track track_))
     (define (add-train id_ pos_)
-      (println pos_)
       (let ([trainThread (new trainThread% [track track][id id_][position (send track get-segment pos_)])])
         (set! trains (cons trainThread trains))))
     (define (get-trains)
@@ -29,7 +28,7 @@
             (list (send t get-id)(send (send t get-position) get-id)(send t get-speed))
             answer)))
         answer))
-    (define (set-speed! id_ new-speed dir)(send (find-train trains id_) set-speed! new-speed))
+    (define (set-speed! id_ new-speed dir)(send (find-train trains id_) set-speed! new-speed dir))
     ;private methods
     (define (find-train lst id_)
       (if (empty? lst)

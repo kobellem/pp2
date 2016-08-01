@@ -31,9 +31,9 @@
           (let* ([nodes (send position get-nodes)]
                  [next-node (if dir (cdr nodes)(car nodes))]
                  [segments (send next-node get-segments)]
-                 [next-position (if (equal? (car segments) position)
+                 [next-position (if (equal? (car segments)(send position get-id))
                    (cdr segments)
                    (car segments))])
-            (set! position next-position))))
+            (set! position (send track get-segment next-position)))))
       (loop)))))
 ))
