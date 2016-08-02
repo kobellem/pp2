@@ -34,6 +34,8 @@
                  [next-position (if (equal? (car segments)(send position get-id))
                    (cdr segments)
                    (car segments))])
-            (set! position (send track get-segment next-position)))))
+            (if next-position
+              (set! position (send track get-segment next-position))
+              (set-speed! 0 #t)))))
       (loop)))))
 ))
