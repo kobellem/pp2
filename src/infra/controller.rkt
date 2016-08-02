@@ -69,13 +69,14 @@
     ;update thread
     (define (update) (lambda ()
       (let loop ([ts (send requester request "get-trains")])
+        (println "updating")
         (when (not (empty? ts))
           (for/list ([t ts])
             (let* ([id_ (car t)]
                    [pos_id (cadr t)]
                    [pos_ (send track get-segment pos_id)]
                    [speed_ (caddr t)]
-                   [train (find-train trains id_)])
+                   [train (get-train id_)])
               (send train set-speed! speed_)
               (when (not (equal? pos_ (send train get-position)))
                 (update-position train pos_)))))
