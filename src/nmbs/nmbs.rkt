@@ -23,6 +23,10 @@
     (cons
       'get-trains
       (lambda ()
-        (send tcpRequester request-serialized "get-trains")))))
+        (send tcpRequester request-serialized "get-trains")))
+    (cons
+      'goto
+       (lambda (id dest)
+         (send tcpRequester request "goto" (list id dest))))))
 
 (nmbs)

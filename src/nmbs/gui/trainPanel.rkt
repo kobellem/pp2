@@ -65,6 +65,14 @@
     (define id-message (new message% [label (string-append "Train: " id)][parent this]))
     (define pos-message (new message% [label "wait for update"][parent this]))
     (define speed-message (new message% [label "wait for update"][parent this]))
+    ;add the goto button
+    (define (go button event)
+      (let ([dest (send goto-field get-value)])
+        (if (string->number dest)
+          (goto id (string->number dest))
+          (error "destination must be a number"))))
+    (define goto-field (new text-field% [label "destination:"][parent this]))
+    (define goto-button (new button% [label "go"][parent this][callback go]))
     ;public methods
     (define (get-id) id)
     (define (update! seg speed)
