@@ -21,10 +21,10 @@
           (let* ([nodes (send seg get-nodes)]
                  [node1 (car nodes)]
                  [node2 (cdr nodes)]
-                 [x1 (send node1 get-x)]
-                 [y1 (send node1 get-y)]
-                 [x2 (send node2 get-x)]
-                 [y2 (send node2 get-y)])
+                 [x1 (*(send node1 get-x)3)]
+                 [y1 (*(send node1 get-y)3)]
+                 [x2 (*(send node2 get-x)3)]
+                 [y2 (*(send node2 get-y)3)])
             ;set the right pen color
             (cond
               [(send seg state-eq? 'free)(send dc set-pen green-pen)]
