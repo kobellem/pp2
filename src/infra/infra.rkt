@@ -2,11 +2,11 @@
 ;Author Koen Bellemans
 
 (require racket/serialize)
-(require "load-test-track.rkt" "../lib/tcp/server.rkt" "../lib/tcp/tcpRequester.rkt" "requestHandler.rkt" "controller.rkt")
+(require "load-track.rkt" "../lib/tcp/server.rkt" "../lib/tcp/tcpRequester.rkt" "requestHandler.rkt" "controller.rkt")
 
 (define (infra)
   ;load the testrack
-  (define track (load-test-track))
+  (define track (load-track))
   ;create and initialize simHandler
   ;TODO: option to work with z21 API
   (define simHandler (new tcpRequester% [host "localhost"][port 3001]))
