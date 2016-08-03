@@ -53,7 +53,6 @@
       (define visited '(#f))
       (let loop ([route '()]
                  [from (position train)])
-        (println "looping")
         (if (equal? from to)
           (values (append route (list from)) (not reversed?))
           (let* ([node (if reversed? 
@@ -66,7 +65,6 @@
                  [alt-next-pos (if (and alt-seg-ids (member pos-id alt-seg-ids))
                                  (send track get-segment (next-seg pos-id alt-seg-ids))
                                  #f)])
-            (println (next-seg pos-id seg-ids))
             (when (not (member next-pos visited))
               (begin
                 (set! visited (append visited (list next-pos)))
@@ -75,7 +73,7 @@
               (begin
                 (set! visited (append visited (list alt-next-pos)))
                 (enqueue! queue (lambda () (loop (append route (list from)) alt-next-pos)))))
-            (if (empty? queue)
+            (if (queue-empty? queue)
               (if reversed?
                 #f
                 (calculate-route track train to #t))
