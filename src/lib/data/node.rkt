@@ -12,7 +12,7 @@
 (define-serializable-class* node% object% (externalizable<%>)
   (super-new)
   ;public methods
-  (public set-id! get-id set-coordinates! get-x get-y add-segment get-segments get-alt-segments is-switch? switch is-switched?)
+  (public set-id! get-id set-coordinates! get-x get-y add-segment get-segments get-alt-segments is-switch? switch is-switched? get-connected-segments)
   ;variable initialization
   ;No initialization arguments to support serialization
   (define id #f)
@@ -43,6 +43,10 @@
                      #f)
                    #t)
   (define (is-switched?) switched?)
+  (define (get-connected-segments)
+    (if (switched?)
+      (get-alt-segments)
+      (get-segments)))
   ;private methods
   (define (swap-seg)
     (let ([temp seg2])
