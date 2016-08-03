@@ -10,6 +10,7 @@
     (public init add-train get-trains set-speed!)
     ;variable initialization
     (define track #f)
+    (define switches '())
     (define trains '())
     ;abstraction
     (define (id t)(send t get-id))
@@ -17,7 +18,10 @@
     (define (speed t)(send t get-speed))
     ;public methods
     (define (init track_)
-      (set! track track_))
+      (set! track track_)
+      (send track for-each-node (lambda (node)
+        (when (send node is-switch?)(set! switches (append switches (list node))))))
+      (set! trains '()))
     (define (add-train id_ pos_)
       (let ([trainThread (new trainThread% [track track][id id_][position (send track get-segment pos_)])])
         (set! trains (cons trainThread trains))))
