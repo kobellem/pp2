@@ -32,7 +32,7 @@
                  [next-node (if dir (cdr nodes)(car nodes))]
                  [segments (send next-node get-segments)]
                  [next-position (if (equal? (car segments)(send position get-id))
-                   (cdr segments)
+                   (cadr segments)
                    (car segments))])
             (if next-position
               (set! position (send track get-segment next-position))
