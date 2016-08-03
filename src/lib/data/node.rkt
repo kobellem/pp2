@@ -33,8 +33,8 @@
       [(not seg2) (set! seg2 seg)]
       [(not alt-seg) (set! alt-seg seg)]
       [else (error "Node" id "already has 3 segments")]))
-  (define (get-segments) (cons seg1 seg2))
-  (define (get-alt-segments)(if (is-switch?)(cons seg1 alt-seg) #f))
+  (define (get-segments) (list seg1 seg2))
+  (define (get-alt-segments)(if (is-switch?)(list seg1 alt-seg) #f))
   (define (is-switch?) (if alt-seg #t #f))
   (define (switch) (if (is-switch?)
                      (if switched?
