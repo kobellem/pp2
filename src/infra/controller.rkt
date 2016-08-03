@@ -16,7 +16,7 @@
     (define (id train)(send train get-id))
     (define (position train)(send train get-position))
     (define (stop train)(send requester request "set-speed" (list (send train get-id) 0 #t)))
-    (define (start train)(send requester request "set-speed" (list (send train get-id) 10 #t)))
+    (define (start train dir)(send requester request "set-speed" (list (send train get-id) 10 dir)))
     ;public methods
     (define (add-train id_ pos)
       (set-add! trains (make-train id_ (send track get-segment pos)))
@@ -31,12 +31,12 @@
             ;stop the train if it's moving
             (stop train)
             ;calculate the route and send it to the train
-            (let ([route (calculate-route track train pos #f)])
+            (let-values ([(route dir)(calculate-route track train pos #f)])
               (for/list ([seg (cdr route)])
                 (send seg set-state! 'reserved))
-              (send train set-route! route))
-            ;start the train
-            (start train))
+              (send train set-route! route)
+              ;start the train
+              (start train dir)))
           (error "Train not found"))))
     ;private methods
     (define (find-train st id_)
@@ -50,22 +50,38 @@
             (find-train st id_))))))
     (define (calculate-route track train to reversed?)
       (define queue (make-queue))
-      (define orig-pos (position train))
+      (define visited '(#f))
       (let loop ([route '()]
                  [from (position train)])
+        (println "looping")
         (if (equal? from to)
-          (append route (list from))
+          (values (append route (list from)) (not reversed?))
           (let* ([node (if reversed? 
                            (car (send from get-nodes))
                            (cdr (send from get-nodes)))]
                  [seg-ids (send node get-segments)]
                  [alt-seg-ids (send node get-alt-segments)]
-                 [pos-id (send from get-id)])
-            (enqueue! queue (lambda () (loop (append route (list from))(send track get-segment (next-seg pos-id seg-ids)))))
-            (when alt-seg-ids (enqueue! queue (lambda () (loop (append route (list from))(send track get-segment (next-seg pos-id alt-seg-ids))))))
-            ((dequeue! queue))))))
+                 [pos-id (send from get-id)]
+                 [next-pos (send track get-segment (next-seg pos-id seg-ids))]
+                 [alt-next-pos (if (and alt-seg-ids (member pos-id alt-seg-ids))
+                                 (send track get-segment (next-seg pos-id alt-seg-ids))
+                                 #f)])
+            (println (next-seg pos-id seg-ids))
+            (when (not (member next-pos visited))
+              (begin
+                (set! visited (append visited (list next-pos)))
+                (enqueue! queue (lambda () (loop (append route (list from)) next-pos)))))
+            (when (and alt-seg-ids (not (member alt-next-pos visited)))
+              (begin
+                (set! visited (append visited (list alt-next-pos)))
+                (enqueue! queue (lambda () (loop (append route (list from)) alt-next-pos)))))
+            (if (empty? queue)
+              (if reversed?
+                #f
+                (calculate-route track train to #t))
+              ((dequeue! queue)))))))
     (define (next-seg pos-id seg-ids)
-      (if (eq? pos-id (car seg-ids))(cdr seg-ids)(car seg-ids)))
+      (if (eq? pos-id (car seg-ids))(cadr seg-ids)(car seg-ids)))
     ;update thread
     (define (update) (lambda ()
       (let loop ([ts (send requester request "get-trains")])
