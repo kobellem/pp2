@@ -32,9 +32,12 @@
             (stop train)
             ;calculate the route and send it to the train
             (let-values ([(route dir)(calculate-route track train pos #f)])
-              (for/list ([seg (cdr route)])
-                (send seg set-state! 'reserved))
-              (send train set-route! route)
+              (if route
+                (begin
+                  (for/list ([seg (cdr route)])
+                    (send seg set-state! 'reserved))
+                  (send train set-route! route))
+                (println "No route found"))
               ;start the train
               (start train dir)))
           (error "Train not found"))))
@@ -75,7 +78,7 @@
                 (enqueue! queue (lambda () (loop (append route (list from)) alt-next-pos)))))
             (if (queue-empty? queue)
               (if reversed?
-                #f
+                (values #f #f)
                 (calculate-route track train to #t))
               ((dequeue! queue)))))))
     (define (next-seg pos-id seg-ids)
