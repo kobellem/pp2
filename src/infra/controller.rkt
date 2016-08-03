@@ -107,8 +107,11 @@
         (if (null? (cddr route))
           (begin 
             (stop train)
+            (send (cadr route) set-state! 'free)
             (send train set-position! new-pos))
           (if (equal? new-pos second-seg)
             (send* train (set-position! new-pos)(set-route! (cdr route)))
-            (update-position train new-pos)))))
+            (begin
+              (send train set-route! (cdr route))
+              (update-position train new-pos))))))
 ))
