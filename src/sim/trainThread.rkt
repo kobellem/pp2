@@ -30,7 +30,7 @@
           (sleep delta)
           (let* ([nodes (send position get-nodes)]
                  [next-node (if dir (cdr nodes)(car nodes))]
-                 [segments (send next-node get-segments)]
+                 [segments (send next-node get-current-segments)]
                  [next-position (if (equal? (car segments)(send position get-id))
                    (cadr segments)
                    (car segments))])
