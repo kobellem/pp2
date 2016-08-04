@@ -69,14 +69,17 @@
                  [alt-next-pos (if (and alt-seg-ids (member pos-id alt-seg-ids))
                                  (send track get-segment (next-seg pos-id alt-seg-ids))
                                  #f)])
-            (when (not (member next-pos visited))
-              (begin
-                (set! visited (append visited (list next-pos)))
-                (enqueue! queue (lambda () (loop (append route (list from)) next-pos)))))
-            (when (and alt-seg-ids (not (member alt-next-pos visited)))
-              (begin
-                (set! visited (append visited (list alt-next-pos)))
-                (enqueue! queue (lambda () (loop (append route (list from)) alt-next-pos)))))
+            (when next-pos
+              (when (send next-pos state-eq? 'free)
+                (begin
+                  (when (not (member next-pos visited))
+                    (begin
+                      (set! visited (append visited (list next-pos)))
+                      (enqueue! queue (lambda () (loop (append route (list from)) next-pos)))))
+                  (when (and alt-seg-ids (not (member alt-next-pos visited)))
+                    (begin
+                      (set! visited (append visited (list alt-next-pos)))
+                      (enqueue! queue (lambda () (loop (append route (list from)) alt-next-pos))))))))
             (if (queue-empty? queue)
               (if reversed?
                 (values #f #f)
