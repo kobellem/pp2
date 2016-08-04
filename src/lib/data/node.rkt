@@ -44,7 +44,7 @@
                    #t)
   (define (is-switched?) switched?)
   (define (get-connected-segments)
-    (if (switched?)
+    (if switched?
       (get-alt-segments)
       (get-segments)))
   ;private methods
