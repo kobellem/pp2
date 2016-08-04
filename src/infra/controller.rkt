@@ -13,7 +13,7 @@
     (init-field track requester)
     (define trains (mutable-set))
     ;abstraction
-    (define (id train)(send train get-id))
+    (define (id o)(send o get-id))
     (define (position train)(send train get-position))
     (define (stop train)(send requester request "set-speed" (list (send train get-id) 0 #t)))
     (define (start train dir)(send requester request "set-speed" (list (send train get-id) 10 dir)))
@@ -36,7 +36,8 @@
                 (begin
                   (for/list ([seg (cdr route)])
                     (send seg set-state! 'reserved))
-                  (send train set-route! route))
+                  (send train set-route! route)
+                  (check-switches route dir))
                 (println "No route found"))
               ;start the train
               (start train dir)))
@@ -83,6 +84,17 @@
               ((dequeue! queue)))))))
     (define (next-seg pos-id seg-ids)
       (if (eq? pos-id (car seg-ids))(cadr seg-ids)(car seg-ids)))
+    (define (check-switches route dir)
+      (let* ([current-seg (car route)]
+             [next-seg (cadr route)]
+             [node (if dir
+                     (cdr (send current-seg get-nodes))
+                     (car (send current-seg get-nodes)))])
+        (when (send node is-switch?)
+          (if (send requester request "switch-state" (list (id node)))
+            (when (or (not (member (id current-seg)(send node get-alt-segments)))(not (member (id next-seg)(send node get-alt-segments))))(send requester request "switch" (list (id node))))
+            (when (or (not (member (id current-seg)(send node get-segments)))(not (member (id next-seg)(send node get-segments))))(send requester request "switch" (list (id node)))))))
+      (when (not (null? (cddr route)))(check-switches (cdr route) dir)))
     ;update thread
     (define (update) (lambda ()
       (let loop ([ts (send requester request "get-trains")])
