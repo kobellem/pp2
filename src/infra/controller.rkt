@@ -43,15 +43,15 @@
               (start train dir)))
           (error "Train not found"))))
     ;private methods
-    (define (find-train st id_)
+    (define (find-train st id_ [sf (lambda (c) (string=? (id c) id_))])
       (if (set-empty? st)
         #f
         (let ([current (set-first st)])
-          (if (string=? (id current) id_)
+          (if (sf current)
             current
           (begin
             (set-remove! st current)
-            (find-train st id_))))))
+            (find-train st id_ sf))))))
     (define (calculate-route track train to reversed?)
       (define queue (make-queue))
       (define visited '(#f))
@@ -88,15 +88,16 @@
     (define (next-seg pos-id seg-ids)
       (if (eq? pos-id (car seg-ids))(cadr seg-ids)(car seg-ids)))
     (define (check-switches route dir)
+      (sleep 2)
       (let* ([current-seg (car route)]
              [next-seg (cadr route)]
              [node (if dir
                      (cdr (send current-seg get-nodes))
                      (car (send current-seg get-nodes)))])
         (when (send node is-switch?)
-          (if (send requester request "switch-state" (list (id node)))
-            (when (or (not (member (id current-seg)(send node get-alt-segments)))(not (member (id next-seg)(send node get-alt-segments))))(send requester request "switch" (list (id node))))
-            (when (or (not (member (id current-seg)(send node get-segments)))(not (member (id next-seg)(send node get-segments))))(send requester request "switch" (list (id node)))))))
+          (if (and (member (id current-seg)(send node get-segments))(member (id next-seg)(send node get-segments)))
+            (send requester request "switch" (list (id node) #f))
+            (send requester request "switch" (list (id node) #t)))))
       (when (not (null? (cddr route)))(check-switches (cdr route) dir)))
     ;update thread
     (define (update) (lambda ()
@@ -106,8 +107,8 @@
           (for/list ([pos_id positions])
             ;find the train that was supposed to go by this pos
             (let* ([pos_ (send track get-segment pos_id)]
-                   [train (for/mutable-set ([t trains])
-                           (when (member pos_ (send t get-route)) t))])
+                   [train (find-train (set-copy trains) 0 (lambda (c)
+                     (member pos_ (send c get-route))))])
               (if train
                 (when (not (equal? pos_ (send train get-position)))
                   (update-position train pos_))
