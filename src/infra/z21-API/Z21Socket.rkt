@@ -17,7 +17,7 @@
   (begin
     (define z21 (udp-open-socket #f #f))
     (udp-bind! z21 #f 21105) ;Sockets need to be bound to port 22105 (same as port used by z21). The address does not matter
-    (udp-connect! z21 "localhost" 21105) ;z21's default address is 192.168.0.111 and listens on port 22015
+    (udp-connect! z21 "192.168.0.111" 21105) ;z21's default address is 192.168.0.111 and listens on port 22015
     z21))
 
 (define (send socket message)
