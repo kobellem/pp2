@@ -16,7 +16,7 @@
     (define (id o)(send o get-id))
     (define (position train)(send train get-position))
     (define (stop train)(send requester request "set-speed" (list (send train get-id) 0 #t)))
-    (define (start train dir)(send requester request "set-speed" (list (send train get-id) 10 dir)))
+    (define (start train dir)(send requester request "set-speed" (list (send train get-id) 60 dir)))
     ;public methods
     (define (add-train id_ pos)
       (set-add! trains (make-train id_ (send track get-segment pos)))
@@ -100,20 +100,20 @@
       (when (not (null? (cddr route)))(check-switches (cdr route) dir)))
     ;update thread
     (define (update) (lambda ()
-      (let loop ([ts (send requester request "get-trains")])
+      (let loop ([positions (send requester request "get-positions")])
         (println "updating")
-        (when (not (empty? ts))
-          (for/list ([t ts])
-            (let* ([id_ (car t)]
-                   [pos_id (cadr t)]
-                   [pos_ (send track get-segment pos_id)]
-                   [speed_ (caddr t)]
-                   [train (get-train id_)])
-              (send train set-speed! speed_)
-              (when (not (equal? pos_ (send train get-position)))
-                (update-position train pos_)))))
+        (when (not (empty? positions))
+          (for/list ([pos_id positions])
+            ;find the train that was supposed to go by this pos
+            (let* ([pos_ (send track get-segment pos_id)]
+                   [train (for/mutable-set ([t trains])
+                           (when (member pos_ (send t get-route)) t))])
+              (if train
+                (when (not (equal? pos_ (send train get-position)))
+                  (update-position train pos_))
+                (println "There shouldn't be a train on this segment")))))
         (sleep 3)
-        (loop (send requester request "get-trains")))))
+        (loop (send requester request "get-positions")))))
     (define (update-position train new-pos)
       (let* ([route (send train get-route)]
              [first-seg (car route)]
