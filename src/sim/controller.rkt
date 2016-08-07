@@ -7,7 +7,7 @@
 (define controller%
   (class object%
     (super-new)
-    (public init add-train get-trains set-speed! switch-state? switch)
+    (public init add-train get-trains set-speed! switch-state? switch get-positions)
     ;variable initialization
     (define track #f)
     (define switches '())
@@ -36,9 +36,17 @@
     (define (switch-state? id_)
       (let ([switch (findf (lambda (s) (eq? (send s get-id) id_)) switches)])
         (send switch is-switched?)))
-    (define (switch id_)
+    (define (switch id_ state)
       (let ([switch (findf (lambda (s) (eq? (send s get-id) id_)) switches)])
-        (send switch switch)))
+        (send switch set-switch-state! state)))
+    (define (get-positions)
+      (let ([answer '()])
+        (for/list ([t trains])
+          (set! answer (append 
+            (list (send (send t get-position) get-id))
+            answer)))
+        (println answer)
+        answer))
     ;private methods
     (define (find-train lst id_)
       (if (empty? lst)

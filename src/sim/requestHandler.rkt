@@ -21,6 +21,7 @@
           [(string=? req "set-speed")(set-speed in out)]
           [(string=? req "switch-state")(switch-state in out)]
           [(string=? req "switch")(switch in)]
+          [(string=? req "get-positions")(get-positions out)]
           [else (unknown req out)])
         (flush-output out)))
     ;private methods
@@ -45,7 +46,11 @@
       (let ([id (car (read in))])
         (write (send controller switch-state? id) out)))
     (define (switch in)
-      (let ([id (car (read in))])
-        (send controller switch id)))
+      (let* ([args (read in)]
+             [id (car args)]
+             [state (cadr args)])
+        (send controller switch id state)))
+    (define (get-positions out)
+      (write (send controller get-positions) out))
     (define (unknown req out)
       (write (string-append "Unknown request: " req) out))))
