@@ -45,7 +45,6 @@
           (set! answer (append 
             (list (send (send t get-position) get-id))
             answer)))
-        (println answer)
         answer))
     ;private methods
     (define (find-train lst id_)
