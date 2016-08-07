@@ -15,8 +15,12 @@
     ;abstraction
     (define (id o)(send o get-id))
     (define (position train)(send train get-position))
-    (define (stop train)(send requester request "set-speed" (list (send train get-id) 0 #t)))
-    (define (start train dir)(send requester request "set-speed" (list (send train get-id) 60 dir)))
+    (define (stop train)
+      (send requester request "set-speed" (list (send train get-id) 0 #t))
+      (send train set-speed! 0))
+    (define (start train dir)
+      (send requester request "set-speed" (list (send train get-id) 60 dir))
+      (send train set-speed! 60))
     ;public methods
     (define (add-train id_ pos)
       (set-add! trains (make-train id_ (send track get-segment pos)))
