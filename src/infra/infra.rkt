@@ -4,18 +4,20 @@
 (require racket/serialize)
 (require "load-track.rkt" "../lib/tcp/server.rkt" "../lib/tcp/tcpRequester.rkt" "requestHandler.rkt" "controller.rkt" "z21Handler.rkt")
 
-(define (infra)
+(define (infra mode)
   ;load the testrack
   (define track (load-track))
-  ;create and initialize simHandler
-  ;TODO: option to work with z21 API
-  ;(define simHandler (new tcpRequester% [host "localhost"][port 3001]))
-  ;(send simHandler request "init" (list (serialize track)))
-  (define z21Handler (new z21Handler%))
-  (send z21Handler init)
+  (define requester #f)
+  (cond
+    [(string=? mode "sim")
+      (set! requester (new tcpRequester% [host "localhost"][port 3001]))
+      (send requester request "init" (list (serialize track)))]
+    [(string=? mode "z21")
+      (set! requester (new z21Handler%))
+      (send requester init)])
   ;create controller
   (println "Creating controller")
-  (define controller (new controller% [track track][requester z21Handler]))
+  (define controller (new controller% [track track][requester requester]))
   (define control-thread (thread (send controller update)))
   ;create TCP server
   (println "Creating server")
@@ -28,4 +30,4 @@
   (thread-wait server-thread)
 )
 
-(infra)
+(infra "sim")
